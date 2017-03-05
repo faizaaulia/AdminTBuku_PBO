@@ -241,23 +241,18 @@ public class frmMain extends javax.swing.JFrame {
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         // TODO add your handling code here:
-        if("".equals(txtNIS.getText()) || "".equals(txtStok.getText()) || 
+        if("".equals(txtNIS.getText()) || "".equals(txtNama1.getText()) || "".equals(txtNama2.getText()) || 
                 "".equals(txtKelas.getText()) || "".equals(txtEmail.getText()) ||
-                "".equals(txtAlamat.getText())){
+                "".equals(txtStok.getText())){
             JOptionPane.showMessageDialog(this, "Harap lengkapi data","Error", JOptionPane.WARNING_MESSAGE);
         }else{
-            String JK = "";
-            if(rdLaki.isSelected())
-                JK = "L";
-            else
-                JK = "P";
-            
-            String SQL = "UPDATE t_siswa SET "
-                + "NamaSiswa='"+txtStok.getText()+"', JenisKelamin='"+JK+"', "
-                +"Kelas='"+txtKelas.getText()+"', "
-                +"Email='"+txtEmail.getText()+"', "
-                +"Alamat='"+txtAlamat.getText()+"' " 
-                +"WHERE NIS='"+txtNIS.getText()+"'";
+            String SQL = "UPDATE tb_buku SET "
+                + "JudulBuku='"+txtNama1.getText()+"', "
+                +"Penulis='"+txtNama2.getText()+"', "
+                +"Penerbit='"+txtKelas.getText()+"', "
+                +"TahunTerbit='"+txtEmail.getText()+"', "
+                +"Stok='"+txtStok.getText()+"' " 
+                +"WHERE KodeBuku='"+txtNIS.getText()+"'";
             
             int status = KoneksiDB.execute(SQL);
             if(status == 1){
@@ -273,8 +268,8 @@ public class frmMain extends javax.swing.JFrame {
         // TODO add your handling code here:
         int baris = tbData.getSelectedRow();
         if(baris != -1) {
-            String NIS = tbData.getValueAt(baris,0).toString();
-            String SQL = "DELETE FROM t_siswa WHERE NIS='"+NIS+"'";
+            String KodeBuku = tbData.getValueAt(baris,0).toString();
+            String SQL = "DELETE FROM tb_buku WHERE KodeBuku='"+KodeBuku+"'";
             int status = KoneksiDB.execute(SQL);
             if(status==1) {
                 JOptionPane.showMessageDialog(this, "Data berhasil dihapus", "Sukses", JOptionPane.INFORMATION_MESSAGE);
@@ -289,9 +284,9 @@ public class frmMain extends javax.swing.JFrame {
     private void Reset1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Reset1ActionPerformed
         // TODO add your handling code here:
         txtNama1.setText("");
+        txtNama2.setText("");
         txtNIS.setText("");
         txtKelas.setText("");
-        buttonGroup1.clearSelection();
         txtStok.setText("");
         txtEmail.setText("");
         
@@ -304,19 +299,19 @@ public class frmMain extends javax.swing.JFrame {
 
     private void btnAdd1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdd1ActionPerformed
         // TODO add your handling code here:
-        if("".equals(txtNIS.getText()) || "".equals(txtNama1.getText()) || 
+        if("".equals(txtNIS.getText()) || "".equals(txtNama1.getText()) || "".equals(txtNama2.getText()) || 
             "".equals(txtKelas.getText()) || "".equals(txtStok.getText()) || "".equals(txtEmail.getText())) {
             JOptionPane.showMessageDialog(this, "Harap Lengkapi Data!", "Error", JOptionPane.WARNING_MESSAGE);
         } else {
-            String SQL = "INSERT INTO tb_buku (NIS,NamaSiswa,JenisKelamin,Kelas,Email,Stok) "
-                    + "VALUES('"+txtNIS.getText()+"','"+txtNama1.getText()+"','"
+            String SQL = "INSERT INTO tb_buku (KodeBuku,JudulBuku,Penulis,Penerbit,TahunTerbit,Stok) "
+                    + "VALUES('"+txtNIS.getText()+"','"+txtNama1.getText()+"','"+txtNama2.getText()+"',"
                     + "'"+txtKelas.getText()+"','"+txtEmail.getText()+"','"+txtStok.getText()+"')";
             int status = KoneksiDB.execute(SQL);
             if(status == 1) {
                 JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan", "Sukses", JOptionPane.INFORMATION_MESSAGE);
                 selectData();
             } else {
-                JOptionPane.showMessageDialog(this, "Data gagal ditambahkan", "Sukses", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Data gagal ditambahkan", "Error", JOptionPane.WARNING_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnAdd1ActionPerformed
@@ -326,15 +321,11 @@ public class frmMain extends javax.swing.JFrame {
         int baris = tbData.getSelectedRow();
         if(baris != -1) {
             txtNIS.setText(tbData.getValueAt(baris,0).toString());
-            txtStok.setText(tbData.getValueAt(baris,1).toString());
-            if("Laki-laki".equals(tbData.getValueAt(baris,2).toString())) {
-                rdLaki.setSelected(true);
-            } else {
-                rdPerempuan.setSelected(true);
-            }
+            txtNama1.setText(tbData.getValueAt(baris,1).toString());
+            txtNama2.setText(tbData.getValueAt(baris,2).toString());
             txtKelas.setText(tbData.getValueAt(baris,3).toString());
             txtEmail.setText(tbData.getValueAt(baris,4).toString());
-            txtAlamat.setText(tbData.getValueAt(baris,5).toString());
+            txtStok .setText(tbData.getValueAt(baris,5).toString());
         }
     }//GEN-LAST:event_tbDataMouseClicked
 
@@ -410,24 +401,19 @@ public class frmMain extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void selectData() {
-        String kolom[] = {"NIS","NamaSiswa","JenisKelamin","Kelas","Email","Alamat"};
+        String kolom[] = {"KodeBuku","JudulBuku","Penulis","Penerbit","TahunTerbit","Stok"};
         DefaultTableModel dtm = new DefaultTableModel(null, kolom);
-        String SQL = "SELECT * FROM t_siswa";
+        String SQL = "SELECT * FROM tb_buku";
         ResultSet rs = KoneksiDB.executeQuery(SQL);
         try {
             while(rs.next()){
-                String NIS = rs.getString(1);
-                String NamaSiswa = rs.getString(2);
-                String JenisKelamin = "";
-                if("L".equals(rs.getString(3))){
-                    JenisKelamin = "Laki-laki";
-                }else{
-                    JenisKelamin = "Perempuan";
-                }
-                String Kelas = rs.getString(4);
-                String Email = rs.getString(5);
-                String Alamat = rs.getString(6);
-                String data[] = {NIS,NamaSiswa,JenisKelamin,Kelas,Email,Alamat};
+                String KodeBuku = rs.getString(1);
+                String JudulBuku = rs.getString(2);
+                String Penulis = rs.getString(3);
+                String Penerbit = rs.getString(4);
+                String TahunTerbit = rs.getString(5);
+                String Stok = rs.getString(6);
+                String data[] = {KodeBuku,JudulBuku,Penulis,Penerbit,TahunTerbit,Stok};
                 dtm.addRow(data);
             }
         }catch(SQLException ex){
