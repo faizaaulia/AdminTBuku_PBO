@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  */ 
 public class KoneksiDB { 
     public static Connection setKoneksi() { 
-        String konString = "jdbc:mysql://localhost:3306/db_tobukpbo"; 
+        String konString = "jdbc:mysql://localhost:3306/db_adtobuk"; 
         Connection koneksi = null;
         try { 
             Class.forName("com.mysql.jdbc.Driver"); 

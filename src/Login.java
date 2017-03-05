@@ -98,7 +98,7 @@ public class Login extends javax.swing.JFrame {
         
         try{
             try(Statement statement = (Statement) file_koneksi.GetConnection().createStatement()){
-                statement.executeUpdate("INSERT INTO tb_admin(username, password) VALUES ('"+username+"','"+password+"');");
+                statement.executeUpdate("INSERT INTO tb_akun(username, password) VALUES ('"+username+"','"+password+"');");
             }
             JOptionPane.showMessageDialog(null, "Selemat! anda berhasil sign up");
         }catch(Exception t){
@@ -111,8 +111,8 @@ public class Login extends javax.swing.JFrame {
         PreparedStatement ps;
         
         try{
-            connection = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/db_tobukpbo?zeroDateTimeBehavior=convertToNull","root","");
-            ps = connection.prepareStatement("SELECT * FROM tb_admin WHERE username = ? AND password = ?");
+            connection = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/db_adtobuk?zeroDateTimeBehavior=convertToNull","root","");
+            ps = connection.prepareStatement("SELECT * FROM tb_akun WHERE username = ? AND password = ?");
             ps.setString(1, txtnama.getText());
             ps.setString(2, txtpass.getText());
             ResultSet result = ps.executeQuery();
